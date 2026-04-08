@@ -3,17 +3,21 @@ import dotenv from "dotenv";
 import { prisma } from "../lib/prisma";
 import { UserRole } from "../Types/roleCheck";
 import bcrypt from "bcryptjs";
+import { role } from "better-auth/plugins";
+import { auth } from "../lib/auth";
 dotenv.config();
 
 async function seedAdmin() {
   try {
     const adminData = {
-      name: process.env.ADMIN_NAME as string,
-      email: process.env.ADMIN_EMAIL as string,
-      password: process.env.ADMIN_PASS as string,
+      name: "anto das",
+      email: "admin@medi-store.com",
+      password: "admin123",
       role: UserRole.ADMIN,
-      emailVerified: true,
+      emailVerified: false,
     };
+
+    console.log("admin data ", adminData);
 
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -25,18 +29,13 @@ async function seedAdmin() {
       throw new Error("User Already Exist...!");
     }
 
-    const signUpAdmin = await fetch(
-      `${process.env.API_URL as string}/api/auth/sign-up/email`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(adminData),
-      },
-    );
+    const signUpAdmin = await auth.api.signUpEmail({
+      body: adminData,
+    });
 
-    if (signUpAdmin.ok) {
+    console.log("admin sign up response ", signUpAdmin);
+
+    if (signUpAdmin.user.id) {
       await prisma.user.update({
         where: {
           email: adminData.email,
@@ -47,7 +46,7 @@ async function seedAdmin() {
       });
     }
   } catch (error) {
-    console.log("seed admin error ", error);
+    console.error("Error seeding admin user:", error);
   }
 }
 
