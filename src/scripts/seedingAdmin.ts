@@ -10,9 +10,9 @@ dotenv.config();
 async function seedAdmin() {
   try {
     const adminData = {
-      name: "anto das",
-      email: "admin@medi-store.com",
-      password: "admin123",
+      name: process.env.ADMIN_NAME || "medi store",
+      email: process.env.ADMIN_EMAIL || "admin@medi-store.com",
+      password: process.env.ADMIN_PASS || "########",
       role: UserRole.ADMIN,
       emailVerified: false,
     };
