@@ -48,7 +48,6 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url, token }, request) => {
       try {
         const verificationUrl = `${process.env.APP_URL}/verify-email?token=${token}`;
-        console.log(verificationUrl);
         const info = await transporter.sendMail({
           from: '"Medi-store" <medi@store.com>',
           to: user.email,
