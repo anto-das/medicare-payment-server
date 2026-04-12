@@ -1,6 +1,7 @@
 model Medicine {
     medicine_id    String       @id @default(uuid())
     medicine_name  String       @db.VarChar(150)
+    generic_name   String       @default("") @db.VarChar(150)
     manufacturer   String       @db.Text
     medi_img       String
     category_name  String       @default("ANTIBIOTICS")
