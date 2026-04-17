@@ -9,8 +9,11 @@ model Medicine {
     category       Categories?  @relation(fields: [categoryId], references: [category_id])
     seller_id      String
     price          Decimal      @db.Decimal(10, 0)
+    description    String       @default("") @db.Text
+    unit_type      String       @default("TABLET") @db.VarChar(50)
     stock_quantity Int          @default(0)
     createdAt      DateTime     @default(now())
     reviews        Reviews[]
     orderItems     Order_item[]
+    Cart           Cart[]
 }

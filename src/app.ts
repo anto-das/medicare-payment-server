@@ -10,6 +10,7 @@ import { categoryRouter } from "./modules/categories/category.route";
 import { userRouter } from "./modules/authentication/user.route";
 import { orderRouter } from "./modules/orders/orders.route";
 import globalErrorHandler from "./middleware/globalErrorHandler";
+import { cartRouter } from "./modules/cartItem/cart.route";
 const app = express();
 app.use(express.json());
 dotenv.config();
@@ -28,6 +29,7 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use("/api/own", userRouter);
 app.use("/api/medicine", medicineRoute);
+app.use("/api/cart", cartRouter);
 app.use("/api/seller", sellerRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/category", categoryRouter);

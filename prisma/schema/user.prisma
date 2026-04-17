@@ -12,6 +12,7 @@ model User {
     accounts      Account[]
     orders        Orders[]
     reviews       Reviews[]
+    cart          Cart[]
 
     @@unique([email])
     @@map("user")

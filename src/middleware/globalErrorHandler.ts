@@ -24,6 +24,9 @@ function globalErrorHandler(
       statusCode = 400;
       errorMessage =
         "An operation failed because it depends on one or more records that were required but not found";
+    } else if (err.code === "P2028") {
+      statusCode = 500;
+      errorMessage = "Internal server error";
     }
   }
   res.status(statusCode);
