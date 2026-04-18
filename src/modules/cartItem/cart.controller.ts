@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { prisma } from "../../lib/prisma";
 import { cartService } from "./cart.service";
 
 const createCartItem = async (
@@ -8,7 +7,6 @@ const createCartItem = async (
   next: NextFunction,
 ) => {
   try {
-    req.body.email = req.user?.email;
     const result = await cartService.createCart(req.body);
     res.status(200).send({
       success: true,
@@ -20,6 +18,25 @@ const createCartItem = async (
   }
 };
 
+const getCartItems = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await cartService.getCartItems();
+    res.status(200).send({
+      success: true,
+      message: "retrieved all data successfully",
+      data: result,
+    });
+  } catch (err: any) {
+    next(err);
+    console.log(err);
+  }
+};
+
 export const cartItemController = {
   createCartItem,
+  getCartItems,
 };

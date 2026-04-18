@@ -1,14 +1,10 @@
 import { prisma } from "../../lib/prisma";
 
-const createCart = async (payload: {
-  id: string;
-  quantity: number;
-  email: string;
-}) => {
+const createCart = async (id: string) => {
   const result = await prisma.$transaction(
     async (tx) => {
       const medicine = await tx.medicine.findUnique({
-        where: { medicine_id: payload.id },
+        where: { medicine_id: id },
       });
 
       if (!medicine) {
@@ -32,16 +28,21 @@ const createCart = async (payload: {
           medi_img: medicine.medi_img || "", // fallback value
           price: Number(medicine.price),
           category_name: medicine.category_name,
-          quantity: payload.quantity,
+          //   quantity: payload.quantity,
         },
       });
     },
     { maxWait: 2000, timeout: 50000 },
   );
 
-  console.log(result);
+  return result;
 };
 
+const getCartItems = async () => {
+  const result = await prisma.cart.findMany();
+  return result;
+};
 export const cartService = {
   createCart,
+  getCartItems,
 };

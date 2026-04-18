@@ -9,5 +9,6 @@ router.post(
   roleCheckerAuth(UserRole.CUSTOMER),
   cartItemController.createCartItem,
 );
+router.get("/", cartItemController.getCartItems);
 
 export const cartRouter = router;
