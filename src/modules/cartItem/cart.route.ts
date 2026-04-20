@@ -4,11 +4,8 @@ import roleCheckerAuth from "../../middleware/auth";
 import { UserRole } from "../../Types/roleCheck";
 
 const router: Router = Router();
-router.post(
-  "/",
-  roleCheckerAuth(UserRole.CUSTOMER),
-  cartItemController.createCartItem,
-);
+router.post("/", cartItemController.createCartItem);
 router.get("/", cartItemController.getCartItems);
+router.delete("/", cartItemController.deleteAll);
 
 export const cartRouter = router;

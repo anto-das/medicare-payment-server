@@ -1,8 +1,9 @@
 model Cart {
     cart_id       String    @unique @default(uuid())
     medicine_id   String?
-    user_email    String?
-    user          User?     @relation(fields: [user_email], references: [email])
+    user_id       String?
+    guest_id      String?
+    user          User?     @relation(fields: [user_id], references: [id])
     medicine      Medicine? @relation(fields: [medicine_id], references: [medicine_id])
     medicine_name String    @db.VarChar(150)
     generic_name  String    @default("strip") @db.VarChar(150)
