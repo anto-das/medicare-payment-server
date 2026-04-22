@@ -8,7 +8,6 @@ const createCartItem = async (
 ) => {
   try {
     const { id, guest_id, user_id } = req.body;
-
     const result = await cartService.createCart({ id, user_id, guest_id });
     res.status(200).send({
       success: true,
@@ -26,9 +25,11 @@ const getCartItems = async (
   next: NextFunction,
 ) => {
   try {
+    const user_id = req.query?.user_id;
+    const guest_id = req.query?.guest_id;
     const payload: { user_id: string; guest_id: string } = {
-      user_id: req.body?.user?.id as string,
-      guest_id: req.body?.guest_id as string,
+      user_id: user_id as string,
+      guest_id: guest_id as string,
     };
     const result = await cartService.getCartItems(payload);
     res.status(200).send({
@@ -39,6 +40,21 @@ const getCartItems = async (
   } catch (err: any) {
     console.log("get cart error what's the error: ", err);
     next(err);
+  }
+};
+
+const updateCart = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.body.cart_id;
+    const quantity = Number(req.body.quantity);
+    const result = await cartService.updateCart(id, quantity);
+    res.status(200).send({
+      success: true,
+      message: "update data successfully..",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -59,5 +75,6 @@ const deleteAll = async (req: Request, res: Response, next: NextFunction) => {
 export const cartItemController = {
   createCartItem,
   getCartItems,
+  updateCart,
   deleteAll,
 };

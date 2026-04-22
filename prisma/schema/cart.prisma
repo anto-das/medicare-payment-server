@@ -9,6 +9,7 @@ model Cart {
     generic_name  String    @default("strip") @db.VarChar(150)
     manufacturer  String    @db.Text
     medi_img      String
+    quantity      Int       @default(1) @db.Integer()
     price         Decimal   @db.Decimal(10, 0)
     category_name String    @default("ANTIBIOTICS")
 }

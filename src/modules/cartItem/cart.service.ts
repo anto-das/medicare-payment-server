@@ -28,7 +28,7 @@ const createCart = async (payload: {
           guest_id: payload.guest_id as string,
         },
       });
-      console.log("cart item: ", cartItem);
+      // console.log("cart item: ", cartItem);
       return cartItem;
     },
     { maxWait: 5000, timeout: 10000 },
@@ -42,31 +42,45 @@ const getCartItems = async (payload: {
 }) => {
   const result = await prisma.$transaction(
     async (tx) => {
-      await tx.cart.updateMany({
-        where: {
-          guest_id: payload.guest_id as string,
-        },
-        data: {
-          user_id: payload.user_id as string,
-        },
+      if (payload.user_id && payload.guest_id) {
+        await tx.cart.updateMany({
+          where: { guest_id: payload.guest_id },
+          data: {
+            user_id: payload.user_id,
+            guest_id: null,
+          },
+        });
+      }
+
+      const cartItems = await tx.cart.findMany({
+        where: payload.user_id
+          ? { user_id: payload.user_id }
+          : { guest_id: payload.guest_id },
       });
-      const getMedicineByGuestId = await tx.cart.findMany({
-        where: {
-          OR: [
-            { guest_id: payload.guest_id as string },
-            { user_id: payload.user_id as string },
-          ],
-        },
-      });
-      return getMedicineByGuestId;
+
+      return cartItems;
     },
     {
-      maxWait: 3000,
-      timeout: 70000,
+      maxWait: 5000,
+      timeout: 10000,
     },
   );
+
   return result;
 };
+
+const updateCart = async (id: string, quantity: number) => {
+  const result = await prisma.cart.update({
+    where: {
+      cart_id: id,
+    },
+    data: {
+      quantity: quantity,
+    },
+  });
+  return result;
+};
+
 const deleteAll = async (category_name: string) => {
   const result = await prisma.cart.deleteMany({
     where: {
@@ -78,5 +92,6 @@ const deleteAll = async (category_name: string) => {
 export const cartService = {
   createCart,
   getCartItems,
+  updateCart,
   deleteAll,
 };
