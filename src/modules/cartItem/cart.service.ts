@@ -81,10 +81,19 @@ const updateCart = async (id: string, quantity: number) => {
   return result;
 };
 
-const deleteAll = async (category_name: string) => {
+const deleteSingleData = async (id: string) => {
+  const result = await prisma.cart.delete({
+    where: {
+      cart_id: id,
+    },
+  });
+  return result;
+};
+
+const deleteAll = async (guest_id: string) => {
   const result = await prisma.cart.deleteMany({
     where: {
-      category_name,
+      guest_id: guest_id,
     },
   });
   return result;
@@ -93,5 +102,6 @@ export const cartService = {
   createCart,
   getCartItems,
   updateCart,
+  deleteSingleData,
   deleteAll,
 };

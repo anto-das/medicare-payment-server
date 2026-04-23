@@ -8,6 +8,7 @@ const createCartItem = async (
 ) => {
   try {
     const { id, guest_id, user_id } = req.body;
+    console.log(req.body)
     const result = await cartService.createCart({ id, user_id, guest_id });
     res.status(200).send({
       success: true,
@@ -58,16 +59,36 @@ const updateCart = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const deleteAll = async (req: Request, res: Response, next: NextFunction) => {
+const deleteSingleData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const categoryName = req.body.category_name;
-
-    const result = await cartService.deleteAll(categoryName);
+    const id = req.params.id as string;
+    const result = await cartService.deleteSingleData(id);
     res.status(200).send({
       success: true,
+      message: `${result.category_name} deleted successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteAll = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body)
+  try {
+    const guest_id = req.body?.payload.guest_id as string;
+    console.log("guest id from cart controller: ", guest_id);
+    const result = await cartService.deleteAll(guest_id);
+    res.status(200).send({
+      success: true,
+      message: "deleted all data successfully",
       data: result,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -76,5 +97,6 @@ export const cartItemController = {
   createCartItem,
   getCartItems,
   updateCart,
+  deleteSingleData,
   deleteAll,
 };
