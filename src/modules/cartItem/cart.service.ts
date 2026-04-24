@@ -4,6 +4,7 @@ const createCart = async (payload: {
   id: string;
   user_id?: string;
   guest_id?: string;
+  quantity: number;
 }) => {
   const result = await prisma.$transaction(
     async (tx) => {
@@ -26,6 +27,7 @@ const createCart = async (payload: {
           category_name: medicine.category_name,
           user_id: payload.user_id as string,
           guest_id: payload.guest_id as string,
+          quantity: payload.quantity,
         },
       });
       // console.log("cart item: ", cartItem);
@@ -68,6 +70,8 @@ const getCartItems = async (payload: {
 
   return result;
 };
+
+//step-1:
 
 const updateCart = async (id: string, quantity: number) => {
   const result = await prisma.cart.update({
