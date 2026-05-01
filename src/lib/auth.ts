@@ -22,7 +22,19 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc
   }),
-  trustedOrigins: [process.env.APP_URL! || "http://localhost:3000"],
+
+  advanced: {
+    cookiePrefix: "better-auth",
+    crossOrigin: true,
+  },
+
+  baseURL: "http://localhost:5000/api/auth", // Backend-er full auth path
+  secret: process.env.BETTER_AUTH_SECRET,
+  trustedOrigins: [process.env.APP_URL || "http://localhost:3000"],
+
+  // cookie: {
+  //   secure: false,
+  // },
 
   user: {
     additionalFields: {

@@ -9,6 +9,7 @@ const createOrders = async (
   next: NextFunction,
 ) => {
   try {
+    // console.log(req.user)
     const result = await orderService.createOrders(
       req.body,
       req.user?.email as string,
@@ -19,6 +20,7 @@ const createOrders = async (
       data: result,
     });
   } catch (e) {
+    console.log(e);
     next(e);
   }
 };

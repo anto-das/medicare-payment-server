@@ -9,15 +9,16 @@ const createOrders = async (
   > & {
     orderItems: {
       medicine_id: string;
-      order_quantity: number;
+      quantity: number;
       price: string | number;
     }[];
   },
   customer_email: string,
 ) => {
+  const { total_bill, orderItems } = data;
   const result = await prisma.$transaction(async (tx) => {
     const sellerIds = await Promise.all(
-      data.orderItems.map(async (item) => {
+      orderItems.map(async (item) => {
         return await tx.medicine.findUnique({
           where: {
             medicine_id: item.medicine_id,
@@ -30,19 +31,21 @@ const createOrders = async (
     );
 
     for (const sellerId of sellerIds) {
+      if (!sellerId) continue;
       const order = await tx.orders.create({
         data: {
-          customer_email,
-          total_bill: data.total_bill,
+          customer_email: customer_email,
+          total_bill: Number(data.total_bill),
           seller_id: sellerId?.seller_id as string,
         },
       });
+      // console.log("order:  ", order);
       await tx.order_item.createMany({
         data: data.orderItems.map((item) => ({
           order_id: order.order_id,
           medicine_id: item.medicine_id,
-          order_quantity: item.order_quantity,
-          price: item.price,
+          quantity: Number(item.quantity),
+          price: Number(item.price),
         })),
       });
       return await tx.orders.findUnique({

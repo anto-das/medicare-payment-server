@@ -1,5 +1,5 @@
 model Orders {
-    order_id       String       @id @default(ulid())
+    order_id       String       @id @default(uuid())
     customer_email String
     user           User         @relation(fields: [customer_email], references: [email])
     seller_id      String

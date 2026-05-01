@@ -8,27 +8,26 @@ import dotenv from "dotenv";
 import { adminRouter } from "./modules/admin/admin.route";
 import { categoryRouter } from "./modules/categories/category.route";
 import { userRouter } from "./modules/authentication/user.route";
-import { orderRouter } from "./modules/orders/orders.route";
+
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import { cartRouter } from "./modules/cartItem/cart.route";
 import cookieParser from "cookie-parser";
-const app = express();
-app.use(express.json());
+import { orderRouter } from "./modules/orders/orders.route";
 dotenv.config();
-
+const app = express();
 app.use(
   cors({
     origin: [process.env.APP_URL || "http://localhost:3000"],
     credentials: true,
   }),
 );
-
 app.use(cookieParser());
+app.use(express.json());
 
 app.get("/", async (req: Request, res: Response) => {
   res.send("Hello Medi Store....");
 });
-app.all("/api/auth/*splat", toNodeHandler(auth));
+app.all("/api/auth/*path", toNodeHandler(auth));
 
 app.use("/api/own", userRouter);
 app.use("/api/medicine", medicineRoute);

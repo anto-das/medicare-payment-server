@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { auth as betterAuth } from "../lib/auth";
+import { auth, auth as betterAuth } from "../lib/auth";
 import { UserRole } from "../Types/roleCheck";
+import { fromNodeHeaders } from "better-auth/node";
 
 function roleCheckerAuth(...roles: UserRole[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const session = await betterAuth.api.getSession({
+      const session = await auth.api.getSession({
         headers: req.headers as any,
       });
+
       if (!session) {
         res.status(401).send({
           success: false,
