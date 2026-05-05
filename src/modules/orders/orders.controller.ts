@@ -31,7 +31,6 @@ const getAllOrders = async (req: Request, res: Response) => {
       req.user?.email as string,
       req.user?.role as UserRole,
     );
-    // console.log(result);
     res.status(200).send({
       success: true,
       message: "Retrieved all orders data successfully..",

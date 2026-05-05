@@ -74,7 +74,7 @@ const getAllOrders = async (email: string, role: UserRole) => {
         select: {
           item_id: true,
           order_id: true,
-          order_quantity: true,
+          quantity: true,
           price: true,
         },
       },
