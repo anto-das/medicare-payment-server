@@ -7,6 +7,7 @@ model Orders {
     total_bill     Decimal      @db.Decimal(10, 0)
     order_date     DateTime     @default(now()) @db.Timestamp()
     orderItems     Order_item[]
+    reviews        Reviews[]
 }
 
 enum Status {
@@ -15,4 +16,3 @@ enum Status {
     SHIPPED
     DELIVERED
 }
-

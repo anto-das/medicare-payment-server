@@ -14,7 +14,7 @@ const createOrders = async (
       req.body,
       req.user?.email as string,
     );
-    res.status(200).send({
+    res.status(201).send({
       success: true,
       message: "create orders successfully..",
       data: result,

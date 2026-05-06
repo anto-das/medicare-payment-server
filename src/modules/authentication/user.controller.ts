@@ -7,7 +7,7 @@ const getMe = async (req: Request, res: Response, next: NextFunction) => {
     console.log(email);
     // console.log(req)
     const result = await userService.getMe(email as string);
-    res.status(200).send({
+    res.status(201).send({
       success: true,
       message: "Retrieved your info successfully..",
       data: result,

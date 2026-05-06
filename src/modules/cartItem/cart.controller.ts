@@ -14,7 +14,7 @@ const createCartItem = async (
       guest_id,
       quantity,
     });
-    res.status(200).send({
+    res.status(201).send({
       success: true,
       message: "added cart item successfully..",
       data: result,

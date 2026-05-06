@@ -11,9 +11,10 @@ function globalErrorHandler(
   let errorMessage = "Internal server error..";
   let errDetails = err;
 
-  // console.log("global errorrrrr*********", err);
-
-  if (err instanceof Prisma.PrismaClientValidationError) {
+  if (err instanceof Error && !(err as any).code) {
+    statusCode = 400;
+    errorMessage = err.message;
+  } else if (err instanceof Prisma.PrismaClientValidationError) {
     statusCode = 400;
     errorMessage = "You provide incorrect type or missing fields";
   } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -25,8 +26,11 @@ function globalErrorHandler(
       errorMessage =
         "An operation failed because it depends on one or more records that were required but not found";
     } else if (err.code === "P2028") {
-      statusCode = 500;
-      errorMessage = "Internal server error";
+      statusCode = 400;
+      errorMessage = "Failed to parse the query.";
+    } else if (err.message) {
+      statusCode = 400;
+      errorMessage = err.message;
     }
   }
   res.status(statusCode);

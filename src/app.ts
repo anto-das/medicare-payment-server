@@ -13,6 +13,7 @@ import globalErrorHandler from "./middleware/globalErrorHandler";
 import { cartRouter } from "./modules/cartItem/cart.route";
 import cookieParser from "cookie-parser";
 import { orderRouter } from "./modules/orders/orders.route";
+import { reviewRouter } from "./modules/review/review.router";
 dotenv.config();
 const app = express();
 app.use(
@@ -36,6 +37,7 @@ app.use("/api/seller", sellerRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/review", reviewRouter);
 
 app.use((req: Request, res: Response) => {
   res.status(404).send({

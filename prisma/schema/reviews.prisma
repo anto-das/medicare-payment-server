@@ -1,10 +1,11 @@
 model Reviews {
-    review_id      String   @id @default(uuid())
+    review_id      String @id @default(uuid())
     customer_email String
-    customer       User     @relation(fields: [customer_email], references: [email])
-    medicine_id    String
-    user_location  String   @db.VarChar(100)
-    medicine       Medicine @relation(fields: [medicine_id], references: [medicine_id])
-    rating         Int      @default(5)
-    comment        String   @db.Text
-}
+    customer       User   @relation(fields: [customer_email], references: [email])
+    orderId      String
+    order         Orders @relation(fields: [orderId], references: [order_id])
+    user_location  String @db.VarChar(100)
+    rating         Int    @default(5)
+    comment        String @db.Text
+    createdAt      DateTime @default(now())
+    }
