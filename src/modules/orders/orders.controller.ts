@@ -71,9 +71,12 @@ const getFirstOrder = async (
   next: NextFunction,
 ) => {
   try {
-    const email = req.query.email;
+    const email = req.user?.email;
+    console.log(email);
     const result = await orderService.getFirstOrder(email as string);
+
     res.status(200).send({
+      success: true,
       data: result,
     });
   } catch (error: any) {

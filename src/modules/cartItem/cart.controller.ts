@@ -81,8 +81,8 @@ const deleteSingleData = async (
 const deleteAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const guest_id = req.body?.payload.guest_id as string;
-    console.log(req.body);
-    console.log("guest id from cart controller: ", guest_id);
+    // console.log(req.body);
+    // console.log("guest id from cart controller: ", guest_id);
     const result = await cartService.deleteAll(guest_id);
     res.status(200).send({
       success: true,

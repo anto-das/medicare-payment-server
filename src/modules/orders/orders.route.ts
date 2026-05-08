@@ -17,7 +17,7 @@ router.get(
 );
 
 router.get(
-  "/:id",
+  "/getById:id",
   roleCheckerAuth(UserRole.CUSTOMER, UserRole.SELLER),
   orderController.getSingleOrder,
 );
