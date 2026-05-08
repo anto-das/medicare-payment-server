@@ -12,7 +12,7 @@ router.post(
 );
 router.get(
   "/",
-  roleCheckerAuth(UserRole.CUSTOMER,UserRole.ADMIN),
+  roleCheckerAuth(UserRole.CUSTOMER, UserRole.ADMIN),
   orderController.getAllOrders,
 );
 
@@ -20,6 +20,12 @@ router.get(
   "/:id",
   roleCheckerAuth(UserRole.CUSTOMER, UserRole.SELLER),
   orderController.getSingleOrder,
+);
+
+router.get(
+  "/getFirst",
+  roleCheckerAuth(UserRole.CUSTOMER),
+  orderController.getFirstOrder,
 );
 
 // router.put(

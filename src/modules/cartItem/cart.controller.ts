@@ -30,10 +30,8 @@ const getCartItems = async (
   next: NextFunction,
 ) => {
   try {
-    const user_id = req.query?.user_id;
     const guest_id = req.query?.guest_id;
-    const payload: { user_id: string; guest_id: string } = {
-      user_id: user_id as string,
+    const payload: { guest_id: string } = {
       guest_id: guest_id as string,
     };
     const result = await cartService.getCartItems(payload);
@@ -83,6 +81,7 @@ const deleteSingleData = async (
 const deleteAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const guest_id = req.body?.payload.guest_id as string;
+    console.log(req.body);
     console.log("guest id from cart controller: ", guest_id);
     const result = await cartService.deleteAll(guest_id);
     res.status(200).send({

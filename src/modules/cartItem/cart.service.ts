@@ -39,8 +39,8 @@ const createCart = async (payload: {
 };
 
 const getCartItems = async (payload: {
-  user_id?: string | null;
-  guest_id: string | null;
+  user_id?: string;
+  guest_id: string;
 }) => {
   const result = await prisma.$transaction(
     async (tx) => {
@@ -53,11 +53,10 @@ const getCartItems = async (payload: {
           },
         });
       }
-
       const cartItems = await tx.cart.findMany({
-        where: payload.user_id
-          ? { user_id: payload.user_id }
-          : { guest_id: payload.guest_id },
+        where: {
+          guest_id: payload.guest_id,
+        },
       });
 
       return cartItems;

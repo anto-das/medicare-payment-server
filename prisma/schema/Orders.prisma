@@ -8,6 +8,7 @@ model Orders {
     order_date     DateTime     @default(now()) @db.Timestamp()
     orderItems     Order_item[]
     reviews        Reviews[]
+    createdAt      DateTime     @default(now())
 }
 
 enum Status {

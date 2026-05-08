@@ -65,6 +65,22 @@ const getSingleOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getFirstOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const email = req.query.email;
+    const result = await orderService.getFirstOrder(email as string);
+    res.status(200).send({
+      data: result,
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
 // const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
 //     const id = req.params.id;
@@ -96,6 +112,7 @@ export const orderController = {
   createOrders,
   getAllOrders,
   getSingleOrder,
+  getFirstOrder,
   // updateOrder,
   // deleteOrder,
 };

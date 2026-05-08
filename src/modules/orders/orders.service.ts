@@ -57,6 +57,21 @@ const createOrders = async (
   return result;
 };
 
+const getFirstOrder = async (email: string) => {
+  const result = await prisma.orders.findFirst({
+    where: {
+      customer_email: email,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      order_id: true,
+    },
+  });
+  return result;
+};
+
 const getAllOrders = async (email: string, role: UserRole) => {
   if (role === UserRole.ADMIN) {
     return await prisma.orders.findMany({
@@ -142,6 +157,7 @@ const getSingleOrder = async (order_id: string) => {
 
 export const orderService = {
   createOrders,
+  getFirstOrder,
   getAllOrders,
   getSingleOrder,
   // updateOrder,
