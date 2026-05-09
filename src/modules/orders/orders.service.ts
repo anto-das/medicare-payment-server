@@ -93,7 +93,6 @@ const getSingleOrder = async (order_id: string) => {
   });
 };
 const getFirstOrder = async (email: string) => {
-  console.log("get first email from order service: ", email);
   return await prisma.orders.findFirst({
     where: {
       customer_email: email,

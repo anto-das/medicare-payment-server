@@ -1,5 +1,6 @@
 model Reviews {
     review_id      String   @id @default(uuid())
+    customer_name  String
     customer_email String
     customer       User     @relation(fields: [customer_email], references: [email])
     orderId        String

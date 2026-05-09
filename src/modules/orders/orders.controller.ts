@@ -72,9 +72,8 @@ const getFirstOrder = async (
 ) => {
   try {
     const email = req.user?.email;
-    console.log(email);
+    // console.log(email);
     const result = await orderService.getFirstOrder(email as string);
-
     res.status(200).send({
       success: true,
       data: result,

@@ -9,29 +9,30 @@ const createReview = async (
   // Implementation for creating a new review
   try {
     const {
-      review_id,
       customer_email,
+      customer_name,
       order_id,
       user_location,
       rating,
       comment,
     } = req.body;
-
+    // console.log("req body from review controller: ", customer_email,customer_name);
     const result = await reviewService.createReview({
-      review_id,
+      customer_name,
       customer_email,
       order_id,
       user_location,
       rating,
       comment,
     });
+    console.log(result);
     res.status(201).json({
       success: true,
       message: "Review created successfully",
       data: result,
     });
   } catch (error: any) {
-    next(error);
+    return res.status(error.statusCode || 500).json({ message: error.message });
   }
 };
 

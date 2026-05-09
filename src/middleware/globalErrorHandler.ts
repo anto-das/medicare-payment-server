@@ -15,18 +15,18 @@ function globalErrorHandler(
     statusCode = 400;
     errorMessage = err.message;
   } else if (err instanceof Prisma.PrismaClientValidationError) {
-    statusCode = 400;
+    statusCode = 409;
     errorMessage = "You provide incorrect type or missing fields";
   } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === "P2003") {
       statusCode = 400;
       errorMessage = "Foreign key constraint failed on the field!";
     } else if (err.code === "P2025") {
-      statusCode = 400;
+      statusCode = 404;
       errorMessage =
         "An operation failed because it depends on one or more records that were required but not found";
     } else if (err.code === "P2028") {
-      statusCode = 400;
+      statusCode = 505;
       errorMessage = "Failed to parse the query.";
     } else if (err.message) {
       statusCode = 400;

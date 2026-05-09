@@ -1,8 +1,8 @@
 import { prisma } from "../../lib/prisma";
 
 const createReview = async (payload: {
-  review_id: string;
   customer_email: string;
+  customer_name: string;
   order_id: string;
   user_location: string;
   rating: number;
@@ -15,12 +15,16 @@ const createReview = async (payload: {
     },
   });
   if (existingUserReview) {
-    throw new Error("User has already submitted a review for this order.");
+    const error: any = new Error(
+      "User has already submitted a review for this order.",
+    );
+    error.statusCode = 400; // Bad Request
+    throw error;
   }
   const result = await prisma.reviews.create({
     data: {
-      review_id: payload.review_id,
       customer_email: payload.customer_email,
+      customer_name: payload.customer_name,
       orderId: payload.order_id,
       user_location: payload.user_location,
       rating: payload.rating,
