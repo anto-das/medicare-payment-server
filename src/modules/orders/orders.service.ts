@@ -29,13 +29,19 @@ const createOrders = async (
         });
       }),
     );
+    const user = await tx.user.findFirst({
+      where: {
+        email: customer_email,
+      },
+    });
 
     for (const sellerId of sellerIds) {
       if (!sellerId) continue;
       const order = await tx.orders.create({
         data: {
           customer_email: customer_email,
-          total_bill: Number(data.total_bill),
+          customer_name: user?.name as string,
+          total_bill: Number(total_bill),
           seller_id: sellerId?.seller_id as string,
         },
       });

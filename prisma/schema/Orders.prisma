@@ -1,6 +1,7 @@
 model Orders {
     order_id       String       @id @default(uuid())
     customer_email String
+    customer_name  String       @default("")
     user           User         @relation(fields: [customer_email], references: [email])
     seller_id      String
     status         Status       @default(PENDING)

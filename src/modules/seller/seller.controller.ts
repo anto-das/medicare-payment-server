@@ -12,7 +12,6 @@ const postMedicine = async (
     const body = req.body;
     const sellerId = req.user?.id;
     const result = await sellerService.postMedicine(body, sellerId as string);
-    console.log(result);
     res.status(200).send({
       success: true,
       message: "store medicine successfully...",
