@@ -22,6 +22,14 @@ const postMedicine = async (data: any, seller_id: string) => {
   return result;
 };
 
+const getAllSellerMedicines = async (seller_id: string) => {
+  return await prisma.medicine.findMany({
+    where: {
+      seller_id,
+    },
+  });
+};
+
 const getSellerOrders = async (seller_id: string) => {
   return await prisma.orders.findMany({
     where: {
@@ -29,6 +37,9 @@ const getSellerOrders = async (seller_id: string) => {
     },
     include: {
       orderItems: true,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };
@@ -96,6 +107,7 @@ const deleteMedicine = async (medicine_id: string) => {
 
 export const sellerService = {
   postMedicine,
+  getAllSellerMedicines,
   getSellerOrders,
   updateOrderStatus,
   updatedMedicine,

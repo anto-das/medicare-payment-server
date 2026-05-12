@@ -12,6 +12,12 @@ router.post(
 );
 
 router.get(
+  "/medicine",
+  roleCheckerAuth(UserRole.SELLER),
+  sellerController.getAllSellerMedicines,
+);
+
+router.get(
   "/orders",
   roleCheckerAuth(UserRole.SELLER),
   sellerController.getSellerOrders,
