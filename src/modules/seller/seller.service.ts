@@ -11,14 +11,23 @@ const postMedicine = async (data: any, seller_id: string) => {
       category_type: true,
     },
   });
-  console.log(categoryName?.category_type);
+  // console.log("data from seller service: ", data);
   const result = await prisma.medicine.create({
     data: {
-      ...data,
-      category_name: categoryName?.category_type,
+      medicine_name: data.medicine_name as string,
+      category_name: categoryName?.category_type as string,
       seller_id,
+      generic_name: data.generic_name as string,
+      unit_type: data.unit_type as string,
+      stock_quantity: data.stock_quantity,
+      price: data.price,
+      manufacturer: data.manufacturer as string,
+      description: data.description as string,
+      medi_img: data.medi_img,
+      strength: data.strength,
     },
   });
+  // console.log("result from seller service: ", result);
   return result;
 };
 

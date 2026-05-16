@@ -10,6 +10,7 @@ const postMedicine = async (
 ) => {
   try {
     const body = req.body;
+    // console.log("body from seller controller: ",body);
     const sellerId = req.user?.id;
     const result = await sellerService.postMedicine(body, sellerId as string);
     res.status(200).send({
