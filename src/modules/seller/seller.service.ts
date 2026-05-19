@@ -11,7 +11,6 @@ const postMedicine = async (data: any, seller_id: string) => {
       category_type: true,
     },
   });
-  // console.log("data from seller service: ", data);
   const result = await prisma.medicine.create({
     data: {
       medicine_name: data.medicine_name as string,
@@ -27,7 +26,6 @@ const postMedicine = async (data: any, seller_id: string) => {
       strength: data.strength,
     },
   });
-  // console.log("result from seller service: ", result);
   return result;
 };
 

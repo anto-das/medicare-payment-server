@@ -5,8 +5,8 @@ const getMedicine = async (req: Request, res: Response) => {
   const { search, category_name, price } = req.query;
   const searchStr = typeof search === "string" ? search : undefined;
   const categoryNameStr =
-  typeof category_name === "string" ? category_name : undefined;
-  
+    typeof category_name === "string" ? category_name : undefined;
+
   const priceStr = typeof price === "string" ? price : undefined;
   const result = await medicineService.getMedicine({
     search: searchStr,
