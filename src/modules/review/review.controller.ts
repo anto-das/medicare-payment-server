@@ -15,6 +15,7 @@ const createReview = async (
       user_location,
       rating,
       comment,
+      seller_id,
     } = req.body;
     // console.log("req body from review controller: ", customer_email,customer_name);
     const result = await reviewService.createReview({
@@ -24,8 +25,9 @@ const createReview = async (
       user_location,
       rating,
       comment,
+      seller_id,
     });
-    console.log(result);
+
     res.status(201).json({
       success: true,
       message: "Review created successfully",

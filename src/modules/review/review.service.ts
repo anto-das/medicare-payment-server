@@ -7,6 +7,7 @@ const createReview = async (payload: {
   user_location: string;
   rating: number;
   comment: string;
+  seller_id: string;
 }) => {
   const existingUserReview = await prisma.reviews.findFirst({
     where: {
@@ -29,6 +30,7 @@ const createReview = async (payload: {
       user_location: payload.user_location,
       rating: payload.rating,
       comment: payload.comment,
+      seller_id: payload.seller_id,
     },
   });
   return result;

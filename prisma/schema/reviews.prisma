@@ -8,5 +8,6 @@ model Reviews {
     user_location  String   @db.VarChar(100)
     rating         Int      @default(5)
     comment        String   @db.Text
+    seller_id      String   @default("")
     createdAt      DateTime @default(now())
 }

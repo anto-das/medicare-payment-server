@@ -69,21 +69,6 @@ const updateOrderStatus = async (order_id: string, status: Status) => {
         order_id,
       },
     });
-    // const {customer_email,seller_id,total_bill} = order;
-    // console.log(order);
-    // await tx.orders.upsert({
-    //   where: {
-    //     order_id,
-    //   },
-    //   update: {
-    //     status,
-    //   },
-    //   create: {
-    //     customer_email: order?.customer_email,
-    //     seller_id: order?.seller_id as string,
-    //     total_bill: order?.total_bill,
-    //   },
-    // });
     await tx.orders.upsert({
       where: { order_id },
       update: { status },
