@@ -85,7 +85,6 @@ const getAllOrders = async (email: string, role: UserRole) => {
         },
       },
     },
-    
   });
 };
 
@@ -109,6 +108,7 @@ const getFirstOrder = async (email: string) => {
     },
     select: {
       order_id: true,
+      seller_id: true,
     },
   });
 };

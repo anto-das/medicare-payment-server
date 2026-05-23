@@ -22,6 +22,11 @@ router.get(
   roleCheckerAuth(UserRole.SELLER),
   sellerController.getSellerOrders,
 );
+router.get(
+  "/orders/solo",
+  roleCheckerAuth(UserRole.SELLER),
+  sellerController.getSellerSingleOrders,
+);
 
 router.patch(
   "/orders/:id",

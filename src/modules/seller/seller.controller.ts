@@ -41,6 +41,23 @@ const getAllSellerMedicines = async (
   }
 };
 
+const getSellerSingleOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const seller_id = req.user?.id;
+    const result = await sellerService.getSellerOrders(seller_id as string);
+    res.status(200).send({
+      success: true,
+      message: "Retrieved your orders successfully..",
+      data: result,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
 const getSellerOrders = async (
   req: Request,
   res: Response,
@@ -88,7 +105,7 @@ const updatedMedicine = async (
 ) => {
   try {
     const id = req.params.id;
-    const body = req.body;
+    const body = req.body?.status;
     const result = await sellerService.updatedMedicine(id as string, body);
     res.status(201).send({
       success: true,
@@ -125,4 +142,5 @@ export const sellerController = {
   updateOrderStatus,
   updatedMedicine,
   deleteMedicine,
+  getSellerSingleOrders,
 };

@@ -37,6 +37,17 @@ const getAllSellerMedicines = async (seller_id: string) => {
   });
 };
 
+// const getSellerSingleOrders = async (seller_id: string) => {
+//   return await prisma.orders.findUnique({
+//     where: {
+//       seller_id,
+//     },
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
+// };
+
 const getSellerOrders = async (seller_id: string) => {
   return await prisma.orders.findMany({
     where: {
@@ -104,4 +115,5 @@ export const sellerService = {
   updateOrderStatus,
   updatedMedicine,
   deleteMedicine,
+  // getSellerSingleOrders,
 };
