@@ -19,6 +19,19 @@ const createOrders = async (
   const result = await prisma.$transaction(async (tx) => {
     const sellerIds = await Promise.all(
       orderItems.map(async (item) => {
+        const product = await tx.medicine.findFirst({
+          where: { medicine_id: item.medicine_id },
+        });
+        const patched = await tx.medicine.update({
+          where: {
+            medicine_id: item.medicine_id,
+          },
+          data: {
+            stock_quantity:
+              Number(product?.stock_quantity) - Number(item.quantity),
+          },
+        });
+        // console.log(patched);
         return await tx.medicine.findUnique({
           where: {
             medicine_id: item.medicine_id,

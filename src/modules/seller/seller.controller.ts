@@ -76,6 +76,26 @@ const getSellerOrders = async (
   }
 };
 
+const getDayWiseWeeklyRevenue = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const seller_id = req.user?.id;
+    const result = await sellerService.getDayWiseWeeklyRevenue(
+      seller_id as string,
+    );
+    res.status(200).send({
+      success: true,
+      message: "retrieved last week revenue  successfully..",
+      data: result,
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
 const updateOrderStatus = async (
   req: Request,
   res: Response,
@@ -105,7 +125,9 @@ const updatedMedicine = async (
 ) => {
   try {
     const id = req.params.id;
+    // console.log("param id from seller controller: ", id);
     const body = req.body?.status;
+    // console.log("req body from seller controller: ", body);
     const result = await sellerService.updatedMedicine(id as string, body);
     res.status(201).send({
       success: true,
@@ -143,4 +165,5 @@ export const sellerController = {
   updatedMedicine,
   deleteMedicine,
   getSellerSingleOrders,
+  getDayWiseWeeklyRevenue,
 };

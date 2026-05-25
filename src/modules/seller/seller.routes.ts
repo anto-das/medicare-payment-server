@@ -22,10 +22,11 @@ router.get(
   roleCheckerAuth(UserRole.SELLER),
   sellerController.getSellerOrders,
 );
+
 router.get(
-  "/orders/solo",
+  "/revenue/day-wise",
   roleCheckerAuth(UserRole.SELLER),
-  sellerController.getSellerSingleOrders,
+  sellerController.getDayWiseWeeklyRevenue,
 );
 
 router.patch(

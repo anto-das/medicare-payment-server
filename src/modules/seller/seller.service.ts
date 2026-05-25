@@ -108,6 +108,35 @@ const deleteMedicine = async (medicine_id: string) => {
   });
 };
 
+const getDayWiseWeeklyRevenue = async (id: string) => {
+  // Last 7 days filtering
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  // Raw SQL to extract the day name and sum the amount
+  const result = await prisma.$queryRaw<
+    { day_name: string; total_revenue: number }[]
+  >`
+    SELECT 
+      TRIM(TO_CHAR(d.day_date, 'Day')) AS day_name,
+      COALESCE(SUM(o.total_bill), 0)::FLOAT AS total_revenue
+    FROM (
+      SELECT generate_series(
+        ${sevenDaysAgo}::timestamp, 
+        NOW()::timestamp, 
+        '1 day'::interval
+      )::date AS day_date
+    ) d
+    LEFT JOIN "Orders" o ON o."createdAt"::date = d.day_date 
+      AND o.seller_id = ${id} 
+      AND o.status = 'DELIVERED'
+    GROUP BY d.day_date
+    ORDER BY d.day_date ASC;
+  `;
+
+  return result;
+};
+
 export const sellerService = {
   postMedicine,
   getAllSellerMedicines,
@@ -115,5 +144,5 @@ export const sellerService = {
   updateOrderStatus,
   updatedMedicine,
   deleteMedicine,
-  // getSellerSingleOrders,
+  getDayWiseWeeklyRevenue,
 };
