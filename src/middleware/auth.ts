@@ -9,6 +9,7 @@ function roleCheckerAuth(...roles: UserRole[]) {
       const session = await auth.api.getSession({
         headers: req.headers as any,
       });
+      // console.log("session from role checker middleware: ", session);
       // console.log(req.headers.cookie)
       if (!session) {
         res.status(401).send({
@@ -41,7 +42,7 @@ function roleCheckerAuth(...roles: UserRole[]) {
       }
       next();
     } catch (error) {
-      console.log("error from middleware role checker: ",error)
+      console.log("error from middleware role checker: ", error);
       res.status(500).send({
         error,
       });

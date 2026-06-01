@@ -54,7 +54,8 @@ const getMedicine = async ({
 
   const result = await prisma.medicine.findMany({
     where: {
-      AND: filterCondition,
+      OR: filterCondition,
+      approval_status: "APPROVED",
     },
   });
   return result.map((item) => {

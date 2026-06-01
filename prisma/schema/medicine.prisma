@@ -1,20 +1,27 @@
 model Medicine {
-    medicine_id    String       @id @default(uuid())
-    medicine_name  String       @db.VarChar(150)
-    generic_name   String       @default("") @db.VarChar(150)
-    manufacturer   String       @db.Text
-    medi_img       String
-    category_name  String       @default("ANTIBIOTICS")
-    categoryId     String?
-    category       Categories?  @relation(fields: [categoryId], references: [category_id])
-    strength       String       @default("")
-    seller_id      String
-    price          Decimal      @db.Decimal(10, 0)
-    description    String       @default("") @db.Text
-    unit_type      String       @default("TABLET") @db.VarChar(50)
-    stock_quantity Int          @default(0)
-    createdAt      DateTime     @default(now())
+    medicine_id     String         @id @default(uuid())
+    medicine_name   String         @db.VarChar(150)
+    generic_name    String         @default("") @db.VarChar(150)
+    manufacturer    String         @db.Text
+    medi_img        String
+    category_name   String         @default("ANTIBIOTICS")
+    categoryId      String?
+    category        Categories?    @relation(fields: [categoryId], references: [category_id])
+    strength        String         @default("")
+    seller_id       String
+    price           Decimal        @db.Decimal(10, 0)
+    description     String         @default("") @db.Text
+    unit_type       String         @default("TABLET") @db.VarChar(50)
+    stock_quantity  Int            @default(0)
+    approval_status ApprovalStatus @default(PENDING)
+    createdAt       DateTime       @default(now())
     // reviews        Reviews[]
-    orderItems     Order_item[]
-    Cart           Cart[]
+    orderItems      Order_item[]
+    Cart            Cart[]
+}
+
+enum ApprovalStatus {
+    PENDING
+    APPROVED
+    REJECTED
 }

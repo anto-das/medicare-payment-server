@@ -28,7 +28,7 @@ export const auth = betterAuth({
     crossOrigin: true,
   },
 
-  baseURL: "http://localhost:5000/api/auth", // Backend-er full auth path
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:5000/api/auth", // Backend-er full auth path
   secret: process.env.BETTER_AUTH_SECRET,
   trustedOrigins: [process.env.APP_URL || "http://localhost:3000"],
 

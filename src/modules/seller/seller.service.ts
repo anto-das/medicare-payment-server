@@ -13,9 +13,9 @@ const postMedicine = async (data: any, seller_id: string) => {
   });
   const result = await prisma.medicine.create({
     data: {
+      seller_id: seller_id,
       medicine_name: data.medicine_name as string,
       category_name: categoryName?.category_type as string,
-      seller_id,
       generic_name: data.generic_name as string,
       unit_type: data.unit_type as string,
       stock_quantity: data.stock_quantity,
@@ -36,17 +36,6 @@ const getAllSellerMedicines = async (seller_id: string) => {
     },
   });
 };
-
-// const getSellerSingleOrders = async (seller_id: string) => {
-//   return await prisma.orders.findUnique({
-//     where: {
-//       seller_id,
-//     },
-//     orderBy: {
-//       createdAt: "desc",
-//     },
-//   });
-// };
 
 const getSellerOrders = async (seller_id: string) => {
   return await prisma.orders.findMany({
@@ -69,6 +58,7 @@ const updatedMedicine = async (medicine_id: string, data: any) => {
     },
     data: {
       ...data,
+      stock_quantity: Number(data.stock_quantity),
     },
   });
 };
@@ -137,6 +127,15 @@ const getDayWiseWeeklyRevenue = async (id: string) => {
   return result;
 };
 
+const deleteOrder = async (id: string) => {
+  const result = await prisma.orders.delete({
+    where: {
+      order_id: id,
+    },
+  });
+  return result;
+};
+
 export const sellerService = {
   postMedicine,
   getAllSellerMedicines,
@@ -145,4 +144,5 @@ export const sellerService = {
   updatedMedicine,
   deleteMedicine,
   getDayWiseWeeklyRevenue,
+  deleteOrder,
 };

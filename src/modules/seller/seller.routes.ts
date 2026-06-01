@@ -46,5 +46,10 @@ router.delete(
   roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
   sellerController.deleteMedicine,
 );
+router.delete(
+  "/delete/:id",
+  roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
+  sellerController.deleteOrder,
+);
 
 export const sellerRouter = router;

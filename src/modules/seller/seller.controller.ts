@@ -19,6 +19,7 @@ const postMedicine = async (
       data: result,
     });
   } catch (err) {
+    console.log("error from seller controller: ", err);
     next(err);
   }
 };
@@ -126,7 +127,7 @@ const updatedMedicine = async (
   try {
     const id = req.params.id;
     // console.log("param id from seller controller: ", id);
-    const body = req.body?.status;
+    const body = req.body;
     // console.log("req body from seller controller: ", body);
     const result = await sellerService.updatedMedicine(id as string, body);
     res.status(201).send({
@@ -157,6 +158,20 @@ const deleteMedicine = async (
   }
 };
 
+const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    const result = await sellerService.deleteOrder(id as string);
+    res.status(200).send({
+      success: true,
+      message: "Medicine deleted successfully..",
+      data: result,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const sellerController = {
   postMedicine,
   getAllSellerMedicines,
@@ -166,4 +181,5 @@ export const sellerController = {
   deleteMedicine,
   getSellerSingleOrders,
   getDayWiseWeeklyRevenue,
+  deleteOrder,
 };

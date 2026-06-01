@@ -19,7 +19,7 @@ const createOrders = async (
   const result = await prisma.$transaction(async (tx) => {
     const sellerIds = await Promise.all(
       orderItems.map(async (item) => {
-        const product = await tx.medicine.findFirst({
+        const product = await tx.medicine.findFirstOrThrow({
           where: { medicine_id: item.medicine_id },
         });
         const patched = await tx.medicine.update({
@@ -78,26 +78,60 @@ const createOrders = async (
 
 const getAllOrders = async (email: string, role: UserRole) => {
   if (role === UserRole.ADMIN) {
-    return await prisma.orders.findMany({
-      include: {
-        orderItems: true,
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const orders = await tx.orders.findMany({
+        include: {
+          orderItems: true,
+        },
+      });
+      // return orders;
+      return await Promise.all(
+        orders.map(async (order: any) => {
+          const userName = await tx.user.findUnique({
+            where: {
+              id: order.seller_id,
+            },
+            select: {
+              name: true,
+            },
+          });
+          return { ...order, seller_name: userName?.name };
+        }),
+      );
     });
+
+    return result;
   }
-  return await prisma.orders.findMany({
-    where: {
-      customer_email: email,
-    },
-    include: {
-      orderItems: {
-        select: {
-          item_id: true,
-          order_id: true,
-          quantity: true,
-          price: true,
+  return await prisma.$transaction(async (tx) => {
+    const orders = await tx.orders.findMany({
+      where: {
+        customer_email: email,
+      },
+      include: {
+        orderItems: {
+          select: {
+            item_id: true,
+            order_id: true,
+            quantity: true,
+            price: true,
+          },
         },
       },
-    },
+    });
+    // return orders;
+    return await Promise.all(
+      orders.map(async (order: any) => {
+        const userName = await tx.user.findUnique({
+          where: {
+            id: order.seller_id,
+          },
+          select: {
+            name: true,
+          },
+        });
+        return { ...order, seller_name: userName?.name };
+      }),
+    );
   });
 };
 
@@ -162,15 +196,6 @@ const getFirstOrder = async (email: string) => {
 //       },
 //     });
 //   });
-// };
-
-// const deleteOrder = async (id: string) => {
-//   const result = await prisma.orders.delete({
-//     where: {
-//       order_id: id,
-//     },
-//   });
-//   return result;
 // };
 
 export const orderService = {
