@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 import nodemailer from "nodemailer";
 import { status } from "../Types/status";
+import { oAuthProxy } from "better-auth/plugins";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -23,37 +24,8 @@ export const auth = betterAuth({
     provider: "postgresql", // or "mysql", "postgresql", ...etc
   }),
 
-  advanced: {
-    cookiePrefix: "better-auth",
-    crossOrigin: true,
-  },
-
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:5000/api/auth", // Backend-er full auth path
-  secret: process.env.BETTER_AUTH_SECRET,
-  trustedOrigins: [process.env.APP_URL || "http://localhost:3000"],
-
-  // cookie: {
-  //   secure: false,
-  // },
-
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        defaultValue: "CUSTOMER",
-        required: true,
-      },
-      status: {
-        type: "string",
-        defaultValue: status.ACTIVE,
-        required: false,
-      },
-    },
-  },
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
-    autoSignIn: false, //defaults to true
   },
   emailVerification: {
     sendOnSignUp: true,
@@ -171,8 +143,55 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_SECRET_ID as string,
-      accessType: "offline",
       prompt: "select_account consent",
     },
   },
+
+  baseURL: process.env.APP_URL || "http://localhost:3000", // Backend-er full auth path
+  secret: process.env.BETTER_AUTH_SECRET,
+  trustedOrigins: [process.env.APP_URL || "http://localhost:3000"],
+
+  advanced: {
+    cookies: {
+      session_token: {
+        name: "session_token", // Force this exact name
+        attributes: {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          partitioned: true,
+        },
+      },
+      state: {
+        name: "session_token", // Force this exact name
+        attributes: {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          partitioned: true,
+        },
+      },
+    },
+  },
+
+  // cookie: {
+  //   secure: false,
+  // },
+
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "CUSTOMER",
+        required: true,
+      },
+      status: {
+        type: "string",
+        defaultValue: status.ACTIVE,
+        required: false,
+      },
+    },
+  },
+
+  plugins: [oAuthProxy()],
 });

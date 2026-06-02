@@ -16,19 +16,19 @@ import { orderRouter } from "./modules/orders/orders.route";
 import { reviewRouter } from "./modules/review/review.router";
 dotenv.config();
 const app = express();
+app.use(cookieParser());
 app.use(
   cors({
     origin: [process.env.APP_URL || "http://localhost:3000"],
     credentials: true,
   }),
 );
-app.use(cookieParser());
+app.all("/api/auth/*path", toNodeHandler(auth));
 app.use(express.json());
 
 app.get("/", async (req: Request, res: Response) => {
   res.send("Hello Medi Store....");
 });
-app.all("/api/auth/*path", toNodeHandler(auth));
 
 app.use("/api/own", userRouter);
 app.use("/api/medicine", medicineRoute);
