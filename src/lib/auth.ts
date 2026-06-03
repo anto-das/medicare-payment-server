@@ -133,7 +133,7 @@ export const auth = betterAuth({
   `,
         });
 
-        console.log("Message sent: %s", info.messageId);
+        // console.log("Message sent: %s", info.messageId);
       } catch (err) {
         console.error("Error while sending mail", err);
       }
