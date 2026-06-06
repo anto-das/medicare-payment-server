@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { adminService } from "./admin.service";
 import { success } from "better-auth";
-import { User } from "../../../generated/prisma/client";
+import { ApprovalStatus, User } from "../../../generated/prisma/client";
 
 const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -53,8 +53,32 @@ const updateUserStatus = async (
   }
 };
 
+const updateApprovalStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const userId = req.params.id;
+    const { approval_status } = req.body;
+    const result = await adminService.updateApprovalStatus(
+      userId as string,
+      approval_status,
+    );
+
+    res.status(201).send({
+      success: true,
+      message: "Approval status updated successfully...",
+      data: result,
+    });
+  } catch (e: any) {
+    next(e);
+  }
+};
+
 export const adminController = {
   getUsers,
   getSellers,
   updateUserStatus,
+  updateApprovalStatus,
 };

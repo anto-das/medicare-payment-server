@@ -16,5 +16,10 @@ route.patch(
   roleCheckerAuth(UserRole.ADMIN),
   adminController.updateUserStatus,
 );
+route.patch(
+  "/sellers/:id",
+  roleCheckerAuth(UserRole.ADMIN),
+  adminController.updateApprovalStatus,
+);
 
 export const adminRouter = route;

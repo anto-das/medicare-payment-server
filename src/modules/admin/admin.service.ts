@@ -1,4 +1,4 @@
-import { User } from "../../../generated/prisma/client";
+import { ApprovalStatus, User } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { UserRole } from "../../Types/roleCheck";
 
@@ -65,8 +65,24 @@ const updateUserStatus = async (userId: string, data: User) => {
   return result;
 };
 
+const updateApprovalStatus = async (
+  medicineId: string,
+  approval_status: ApprovalStatus,
+) => {
+  const result = await prisma.medicine.update({
+    where: {
+      medicine_id: medicineId,
+    },
+    data: {
+      approval_status,
+    },
+  });
+  return result;
+};
+
 export const adminService = {
   getUsers,
   getSellers,
   updateUserStatus,
+  updateApprovalStatus,
 };
