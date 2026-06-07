@@ -17,7 +17,7 @@ async function seedAdmin() {
       emailVerified: false,
     };
 
-    console.log("admin data ", adminData);
+    // console.log("admin data ", adminData);
 
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -33,7 +33,7 @@ async function seedAdmin() {
       body: adminData,
     });
 
-    console.log("admin sign up response ", signUpAdmin);
+    // console.log("admin sign up response ", signUpAdmin);
 
     if (signUpAdmin.user.id) {
       await prisma.user.update({

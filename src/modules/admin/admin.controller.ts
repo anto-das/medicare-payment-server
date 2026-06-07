@@ -76,9 +76,31 @@ const updateApprovalStatus = async (
   }
 };
 
+const updateUserRole = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { role } = req.body;
+    const email = req.body.email;
+    // console.log("user_id and role from controller...***...", email, role);
+    const result = await adminService.updateUserRole(email as string, role);
+    res.status(201).send({
+      success: true,
+      message: "User role updated successfully...",
+      data: result,
+    });
+  } catch (e: any) {
+    // console.log("error picked...***...", e);
+    next(e);
+  }
+};
+
 export const adminController = {
   getUsers,
   getSellers,
   updateUserStatus,
   updateApprovalStatus,
+  updateUserRole,
 };

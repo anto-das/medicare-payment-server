@@ -80,9 +80,20 @@ const updateApprovalStatus = async (
   return result;
 };
 
+const updateUserRole = async (email: string, role: UserRole) => {
+  return await prisma.user.update({
+    where: {
+      email: email,
+    },
+    data: {
+      role,
+    },
+  });
+};
 export const adminService = {
   getUsers,
   getSellers,
   updateUserStatus,
   updateApprovalStatus,
+  updateUserRole,
 };

@@ -9,7 +9,7 @@ function roleCheckerAuth(...roles: UserRole[]) {
       const session = await auth.api.getSession({
         headers: req.headers as any,
       });
-      // console.log("session from role checker middleware: ", session);
+
       // console.log(req.headers.cookie)
       if (!session) {
         res.status(401).send({
@@ -34,6 +34,7 @@ function roleCheckerAuth(...roles: UserRole[]) {
       };
 
       if (roles.length && !roles.includes(req.user.role as UserRole)) {
+        // console.log("user role from token...***...", req.user.role);
         res.status(403).send({
           success: false,
           message: "Forbidden access...!",

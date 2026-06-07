@@ -20,7 +20,7 @@ const createOrders = async (
       data: result,
     });
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     next(e);
   }
 };

@@ -41,7 +41,7 @@ const getCartItems = async (
       data: result,
     });
   } catch (err: any) {
-    console.log("get cart error what's the error: ", err);
+    // console.log("get cart error what's the error: ", err);
     next(err);
   }
 };
@@ -90,7 +90,7 @@ const deleteAll = async (req: Request, res: Response, next: NextFunction) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     next(error);
   }
 };
