@@ -9,7 +9,8 @@
     "dev": "npx tsx watch src/server.ts",
     "lint": "./src/**/*",
     "seed:admin": "npx tsx src/scripts/seedingAdmin.ts",
-    "build": "prisma generate && tsup src/app.ts --format esm --platform node --target node20 outDir api --external pg-native"
+    "build": "prisma generate && tsup src/app.ts --format esm --platform node --target node20 outDir api --external pg-native",
+    "stripe:webhook": "stripe listen --forward-to localhost:5000/webhook"
   },
   "keywords": [],
   "author": "",
@@ -19,16 +20,16 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.0.10",
+    "@types/node": "^25.9.2",
     "@types/nodemailer": "^7.0.9",
     "@types/pg": "^8.16.0",
-    "prisma": "^7.3.0",
+    "prisma": "^7.8.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "^7.3.0",
+    "@prisma/client": "^7.8.0",
     "bcryptjs": "^3.0.3",
     "better-auth": "^1.4.17",
     "cookie": "^1.1.1",
