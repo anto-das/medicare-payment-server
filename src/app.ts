@@ -27,6 +27,8 @@ app.post(
   },
 );
 
+app.post("/webhook", express.raw({ type: "application/json" }));
+
 app.use(
   cors({
     origin: [process.env.APP_URL || "http://localhost:3000"],

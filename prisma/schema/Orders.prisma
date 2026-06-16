@@ -6,10 +6,12 @@ model Orders {
     seller_id      String
     status         Status       @default(PENDING)
     total_bill     Decimal      @db.Decimal(10, 0)
+    payment_status String       @default("UNPAID")
     order_date     DateTime     @default(now()) @db.Timestamp()
+    createdAt      DateTime     @default(now())
     orderItems     Order_item[]
     reviews        Reviews[]
-    createdAt      DateTime     @default(now())
+    payment        Payment[]
 }
 
 enum Status {
@@ -18,4 +20,9 @@ enum Status {
     SHIPPED
     DELIVERED
     CANCELLED
+}
+
+enum PaymentStatus {
+    PAID
+    UNPAID
 }

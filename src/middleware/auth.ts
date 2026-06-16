@@ -43,7 +43,6 @@ function roleCheckerAuth(...roles: UserRole[]) {
       }
       next();
     } catch (error) {
-      console.log("error from middleware role checker: ", error);
       res.status(500).send({
         error,
       });

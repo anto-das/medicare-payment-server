@@ -1,27 +1,28 @@
 import { NextFunction, Request, Response } from "express";
 import { categoryService } from "./category.service";
 
+type payload = {
+  category_type: string;
+  category_description: string;
+};
+
 const postCategory = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const category = req.body;
-    const result = await categoryService.postCategory(category);
+    const payload: payload = {
+      category_type: req.body?.category_type as string,
+      category_description: req.body?.category_description as string,
+    };
+    const result = await categoryService.postCategory(payload);
     res.status(201).send({
       success: true,
       data: result,
     });
   } catch (e) {
-    next(
-      res.status(500).send({
-        success: false,
-        message: {
-          "category post error": e,
-        },
-      }),
-    );
+    next(e);
   }
 };
 
