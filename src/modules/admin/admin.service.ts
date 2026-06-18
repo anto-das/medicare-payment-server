@@ -29,7 +29,7 @@ const getSellers = async () => {
         by: ["seller_id"],
         where: {
           seller_id: seller.id,
-          status: "DELIVERED",
+          payment_status: "PAID",
         },
         _sum: {
           total_bill: true,

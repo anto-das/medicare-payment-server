@@ -78,6 +78,7 @@ const updateOrderStatus = async (order_id: string, status: Status) => {
         seller_id: order?.seller_id ?? "",
         total_bill: order?.total_bill ?? new Prisma.Decimal(0),
         status,
+        payment_status: status === "DELIVERED" ? "PAID" : "UNPAID",
       },
     });
 

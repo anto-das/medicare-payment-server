@@ -1,5 +1,6 @@
 import { Orders } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
+import { PaymentStatus } from "../../types/PaymentStatus";
 import { UserRole } from "../../Types/roleCheck";
 
 const createOrders = async (
@@ -31,7 +32,7 @@ const createOrders = async (
               Number(product?.stock_quantity) - Number(item.quantity),
           },
         });
-        // console.log(patched);
+
         return await tx.medicine.findUnique({
           where: {
             medicine_id: item.medicine_id,
@@ -58,7 +59,7 @@ const createOrders = async (
           seller_id: sellerId?.seller_id as string,
         },
       });
-      // console.log("order:  ", order);
+
       await tx.order_item.createMany({
         data: data.orderItems.map((item) => ({
           order_id: order.order_id,

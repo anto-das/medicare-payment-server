@@ -14,20 +14,10 @@ import { cartRouter } from "./modules/cartItem/cart.route";
 import cookieParser from "cookie-parser";
 import { orderRouter } from "./modules/orders/orders.route";
 import { reviewRouter } from "./modules/review/review.router";
+import { paymentRouter } from "./modules/payment/payment.route";
 dotenv.config();
 const app = express();
 app.use(cookieParser());
-
-app.post(
-  "/webhook",
-  express.raw({ type: "application/json" }),
-  async (req: Request, res: Response) => {
-    console.log("webhook received: ", req.body);
-    res.status(200).json({ success: true });
-  },
-);
-
-app.post("/webhook", express.raw({ type: "application/json" }));
 
 app.use(
   cors({
@@ -37,6 +27,7 @@ app.use(
 );
 app.all("/api/auth/*path", toNodeHandler(auth));
 app.use(express.json());
+app.use("/create-checkout-session", paymentRouter);
 
 app.get("/", async (req: Request, res: Response) => {
   res.send("Hello Medi Store....");

@@ -1,103 +1,63 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Stripe from "stripe";
+import { Cart } from "../../../generated/prisma/client";
+import { stripe } from "../../config/stripe.config";
 
-import { prisma } from "../../lib/prisma";
-import { PaymentStatus } from "../../../generated/prisma/enums";
-
-const handlerStripeWebhookEvent = async (event: Stripe.Event) => {
-  const existingPayment = await prisma.payment.findFirst({
-    where: {
-      stripeEventId: event.id,
+const handlePayment = async (
+  carts: Cart[],
+): Promise<Stripe.Checkout.Session> => {
+  const lineItems = carts.map((medicine) => ({
+    price_data: {
+      currency: "usd",
+      product_data: {
+        name: medicine.medicine_name,
+        images: [medicine.medi_img],
+      },
+      unit_amount: Math.round(Number(medicine.price) * 100),
     },
-  });
+    quantity: medicine.quantity,
+  }));
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
 
-  if (existingPayment) {
-    console.log(`Event ${event.id} already processed. Skipping`);
-    return { message: `Event ${event.id} already processed. Skipping` };
-  }
-
-  switch (event.type) {
-    case "checkout.session.completed": {
-      const session = event.data.object;
-
-      const orderId = session.metadata?.orderId;
-
-      const paymentId = session.metadata?.paymentId;
-
-      if (!orderId || !paymentId) {
-        console.error("Missing orderId or paymentId in session metadata");
-        return {
-          message: "Missing orderId or paymentId in session metadata",
-        };
-      }
-
-      const orders = await prisma.orders.findUnique({
-        where: {
-          order_id: orderId,
+    // বামের 'line_items' স্ট্রাইপের ফিক্সড ফিল্ড, ডানের 'lineItems' আপনার বানানো ভেরিয়েবল
+    line_items: lineItems,
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          type: "fixed_amount",
+          fixed_amount: {
+            amount: 60 * 100,
+            currency: "usd",
+          },
+          display_name: "Home Delivery",
+          delivery_estimate: {
+            minimum: { unit: "business_day", value: 1 },
+            maximum: { unit: "business_day", value: 3 },
+          },
         },
-      });
-
-      if (!orders) {
-        console.error(`orders with id ${orderId} not found`);
-        return { message: `orders with id ${orderId} not found` };
-      }
-
-      await prisma.$transaction(async (tx) => {
-        await tx.orders.update({
-          where: {
-            order_id: orderId,
-          },
-          data: {
-            payment_status:
-              session.payment_status === "paid"
-                ? PaymentStatus.PAID
-                : PaymentStatus.UNPAID,
-          },
-        });
-
-        await tx.payment.update({
-          where: {
-            id: paymentId,
-          },
-          data: {
-            stripeEventId: event.id,
-            status:
-              session.payment_status === "paid"
-                ? PaymentStatus.PAID
-                : PaymentStatus.UNPAID,
-            paymentGatewayData: session as any,
-          },
-        });
-      });
-
-      console.log(
-        `Processed checkout.session.completed for order ${orderId} and payment ${paymentId}`,
-      );
-      break;
-    }
-    case "checkout.session.expired": {
-      const session = event.data.object;
-
-      console.log(
-        `Checkout session ${session.id} expired. Marking associated payment as failed.`,
-      );
-      break;
-    }
-    case "payment_intent.payment_failed": {
-      const session = event.data.object;
-
-      console.log(
-        `Payment intent ${session.id} failed. Marking associated payment as failed.`,
-      );
-      break;
-    }
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
-
-  return { message: `Webhook Event ${event.id} processed successfully` };
+      },
+    ],
+    mode: "payment",
+    success_url:
+      `${process.env.APP_URL}/cart/checkout/success?session_id=` +
+      "{CHECKOUT_SESSION_ID}",
+    cancel_url: `${process.env.APP_URL}/cart/checkout/cancel`,
+  });
+  return session;
 };
 
-export const PaymentService = {
-  handlerStripeWebhookEvent,
+const getSessionData = async (session_id: string): Promise<any> => {
+  const session = await stripe.checkout.sessions.retrieve(session_id);
+  const sessionData = {
+    id: session.id.slice(-10),
+    amount: Number(session.amount_total) / 100,
+    status: session.status,
+  };
+
+  return sessionData;
+};
+
+export const paymentService = {
+  handlePayment,
+  getSessionData,
 };
