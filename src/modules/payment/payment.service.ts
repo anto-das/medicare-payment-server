@@ -1,9 +1,13 @@
 import Stripe from "stripe";
 import { Cart } from "../../../generated/prisma/client";
 import { stripe } from "../../config/stripe.config";
+import { prisma } from "../../lib/prisma";
+import { PaymentStatus } from "../../types/PaymentStatus";
 
 const handlePayment = async (
   carts: Cart[],
+  customer_email: string,
+  order_id: string,
 ): Promise<Stripe.Checkout.Session> => {
   const lineItems = carts.map((medicine) => ({
     price_data: {
@@ -16,10 +20,14 @@ const handlePayment = async (
     },
     quantity: medicine.quantity,
   }));
+
+  const orderedItems = carts.map((medicine) => ({
+    medicine_id: medicine.medicine_id,
+    quantity: medicine.quantity,
+    price: Number(medicine.price),
+  }));
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-
-    // বামের 'line_items' স্ট্রাইপের ফিক্সড ফিল্ড, ডানের 'lineItems' আপনার বানানো ভেরিয়েবল
     line_items: lineItems,
     shipping_options: [
       {
@@ -37,6 +45,11 @@ const handlePayment = async (
         },
       },
     ],
+    metadata: {
+      orderedItems: JSON.stringify(orderedItems),
+      customer_email: customer_email,
+      order_id: order_id,
+    },
     mode: "payment",
     success_url:
       `${process.env.APP_URL}/cart/checkout/success?session_id=` +
@@ -57,7 +70,79 @@ const getSessionData = async (session_id: string): Promise<any> => {
   return sessionData;
 };
 
+const handleStripeWebhookService = async (event: Stripe.Event) => {
+  const existingPayment = await prisma.payment.findFirst({
+    where: {
+      stripeEventId: event.id,
+    },
+  });
+
+  if (existingPayment) {
+    console.log(`Event ${event.id} already processed. Skipping`);
+    return { message: `Event ${event.id} already processed. Skipping` };
+  }
+
+  switch (event.type) {
+    case "checkout.session.completed": {
+      const session = event.data.object;
+      const { metadata } = session;
+      const parseOrderedItems = JSON.parse(metadata!.orderedItems!);
+      const customer_email = metadata!.customer_email;
+      const order_id = metadata!.order_id;
+      await prisma.$transaction(async (tx) => {
+        const order = await tx.orders.update({
+          where: {
+            order_id: order_id as string,
+          },
+          data: {
+            payment_status:
+              session.payment_status === "paid" ? "PAID" : "UNPAID",
+          },
+        });
+        const user = await tx.user.findUnique({
+          where: { email: customer_email as string },
+        });
+        if (!user) {
+          return "user not found";
+        }
+        const storePaymentInfo = await tx.payment.create({
+          data: {
+            name: user.name as string,
+            user_email: user.email as string,
+            amount: Number(session.amount_total),
+            transactionId: session.payment_intent as string,
+            stripeEventId: event.id,
+            orderId: order_id as string,
+          },
+        });
+      });
+      break;
+    }
+    case "checkout.session.expired": {
+      const session = event.data.object;
+
+      console.log(
+        `Checkout session ${session.id} expired. Marking associated payment as failed.`,
+      );
+      break;
+    }
+    case "payment_intent.payment_failed": {
+      const session = event.data.object;
+
+      console.log(
+        `Payment intent ${session.id} failed. Marking associated payment as failed.`,
+      );
+      break;
+    }
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  return { message: `Webhook Event ${event.id} processed successfully` };
+};
+
 export const paymentService = {
   handlePayment,
   getSessionData,
+  handleStripeWebhookService,
 };

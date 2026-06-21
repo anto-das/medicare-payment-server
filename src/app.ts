@@ -15,8 +15,14 @@ import cookieParser from "cookie-parser";
 import { orderRouter } from "./modules/orders/orders.route";
 import { reviewRouter } from "./modules/review/review.router";
 import { paymentRouter } from "./modules/payment/payment.route";
+import { paymentController } from "./modules/payment/payment.controller";
 dotenv.config();
 const app = express();
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  paymentController.handleStripeWebhookController,
+);
 app.use(cookieParser());
 
 app.use(

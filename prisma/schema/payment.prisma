@@ -3,11 +3,11 @@ model Payment {
     name               String
     user_email         String
     amount             Float
-    transactionId      String   @unique @db.Uuid()
-    stripeEventId      String?  @unique
+    transactionId      String
+    stripeEventId      String?
     paymentGatewayData Json?
     createdAt          DateTime @default(now())
-    updatedAt          DateTime @updatedAt
+    updatedAt          DateTime @default(now())
 
     orderId     String @unique
     appointment Orders @relation(fields: [orderId], references: [order_id], onDelete: Cascade)

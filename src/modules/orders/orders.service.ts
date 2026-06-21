@@ -1,6 +1,6 @@
 import { Orders } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
-import { PaymentStatus } from "../../types/PaymentStatus";
+
 import { UserRole } from "../../Types/roleCheck";
 
 const createOrders = async (
