@@ -10,7 +10,6 @@ function roleCheckerAuth(...roles: UserRole[]) {
         headers: req.headers as any,
       });
 
-      // console.log(req.headers.cookie)
       if (!session) {
         res.status(401).send({
           success: false,
