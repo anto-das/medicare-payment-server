@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { auth, auth as betterAuth } from "../lib/auth";
-import { UserRole } from "../Types/roleCheck";
+
 import { fromNodeHeaders } from "better-auth/node";
+import { UserRole } from "../Types/roleCheck";
 
 function roleCheckerAuth(...roles: UserRole[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
