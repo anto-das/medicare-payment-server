@@ -1,10 +1,10 @@
 model Order_item {
-    item_id     String   @unique @default(uuid())
-    order_id    String
-    order       Orders   @relation(fields: [order_id], references: [order_id], onDelete: Cascade)
-    medicine_id String
-    medicine    Medicine @relation(fields: [medicine_id], references: [medicine_id], onDelete: Cascade)
-    quantity    Int      @default(1)
-    price       Decimal  @db.Decimal(10, 0)
-    createdAt   DateTime @default(now())
+  item_id     String   @unique @default(uuid())
+  order_id    String
+  medicine_id String
+  price       Decimal  @db.Decimal(10, 0)
+  createdAt   DateTime @default(now())
+  quantity    Int      @default(1)
+  medicine    Medicine @relation(fields: [medicine_id], references: [medicine_id], onDelete: Cascade)
+  order       Orders   @relation(fields: [order_id], references: [order_id], onDelete: Cascade)
 }

@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { Cart } from "../../../generated/prisma/client";
 import { stripe } from "../../config/stripe.config";
 import { prisma } from "../../lib/prisma";
-import { PaymentStatus } from "../../types/PaymentStatus";
+
 
 const handlePayment = async (
   carts: Cart[],
@@ -78,7 +78,6 @@ const handleStripeWebhookService = async (event: Stripe.Event) => {
   });
 
   if (existingPayment) {
-    console.log(`Event ${event.id} already processed. Skipping`);
     return { message: `Event ${event.id} already processed. Skipping` };
   }
 

@@ -1,6 +1,6 @@
 model Categories {
-    category_id          String     @unique @default(uuid())
-    category_type        String     @default("ANTIBIOTICS")
-    category_description String     @default("")
-    medicines            Medicine[]
+  category_id          String     @unique @default(uuid())
+  category_type        String     @default("ANTIBIOTICS")
+  category_description String     @default("")
+  medicines            Medicine[]
 }

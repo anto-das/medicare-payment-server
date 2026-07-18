@@ -1,19 +1,18 @@
 model Payment {
-    id                 String   @id @default(uuid(7))
-    name               String
-    user_email         String
-    amount             Float
-    transactionId      String
-    stripeEventId      String?
-    paymentGatewayData Json?
-    createdAt          DateTime @default(now())
-    updatedAt          DateTime @default(now())
+  id                 String   @id @default(uuid(7))
+  amount             Float
+  transactionId      String
+  stripeEventId      String?  @unique
+  paymentGatewayData Json?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now())
+  orderId            String   @unique
+  name               String
+  user_email         String
+  appointment        Orders   @relation(fields: [orderId], references: [order_id], onDelete: Cascade)
+  user               User     @relation(fields: [user_email], references: [email], onDelete: Cascade)
 
-    orderId     String @unique
-    appointment Orders @relation(fields: [orderId], references: [order_id], onDelete: Cascade)
-    user        User   @relation(fields: [user_email], references: [email], onDelete: Cascade)
-
-    @@index([orderId])
-    @@index([transactionId])
-    @@map("payments")
+  @@index([orderId])
+  @@index([transactionId])
+  @@map("payments")
 }
