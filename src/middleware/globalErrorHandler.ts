@@ -28,11 +28,11 @@ function globalErrorHandler(
     } else if (err.code === "P2028") {
       statusCode = 505;
       errorMessage = "Failed to parse the query.";
-    } else if (err.message) {
+    }  else if (err.message) {
       statusCode = 400;
       errorMessage = err.message;
     }
-  }
+  } 
   res.status(statusCode);
   res.send({
     message: errorMessage,
