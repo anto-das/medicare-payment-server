@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { sellerService } from "./seller.service";
-import { success } from "better-auth";
-import { Status } from "../../../generated/prisma/enums";
 
 const postMedicine = async (
   req: Request,
