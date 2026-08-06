@@ -9,7 +9,7 @@ function globalErrorHandler(
 ) {
   let statusCode = 500;
   let errorMessage = "Internal server error..";
-  let errDetails = err;
+  let errDetails = err.message;
 
   if (err instanceof Error && !(err as any).code) {
     statusCode = 400;
