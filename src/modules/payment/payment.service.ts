@@ -143,5 +143,5 @@ const handleStripeWebhookService = async (event: Stripe.Event) => {
 export const paymentService = {
   handlePayment,
   getSessionData,
-  handleStripeWebhookService,
+  handleStripeWebhookService
 };
