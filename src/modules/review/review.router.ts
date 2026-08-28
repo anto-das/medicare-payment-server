@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { reviewController } from "./review.controller";
 import roleCheckerAuth from "../../middleware/auth";
-import { UserRole } from "../../Types/roleCheck";
+import { UserRole } from "../../types/roleCheck";
 
 export const router: Router = Router();
 

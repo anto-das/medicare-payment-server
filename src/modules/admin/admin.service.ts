@@ -1,6 +1,6 @@
 import { ApprovalStatus, User } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
-import { UserRole } from "../../Types/roleCheck";
+import { UserRole } from "../../types/roleCheck";
 
 const getUsers = async () => {
   const result = await prisma.user.findMany();

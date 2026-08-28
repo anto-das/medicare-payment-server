@@ -2,7 +2,7 @@ import { Router } from "express";
 import { sellerController } from "./seller.controller";
 
 import roleCheckerAuth from "../../middleware/auth";
-import { UserRole } from "../../Types/roleCheck";
+import { UserRole } from "../../types/roleCheck";
 
 const router: Router = Router();
 
