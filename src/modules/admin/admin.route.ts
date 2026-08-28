@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { adminController } from "./admin.controller";
 import roleCheckerAuth from "../../middleware/auth";
-import { UserRole } from "../../Types/roleCheck";
+import { UserRole } from "../../types/roleCheck";
 
 const route: Router = Router();
 

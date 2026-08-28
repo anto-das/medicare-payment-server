@@ -1,6 +1,6 @@
 import { Router } from "express";
 import roleCheckerAuth from "../../middleware/auth";
-import { UserRole } from "../../Types/roleCheck";
+import { UserRole } from "../../types/roleCheck";
 import { categoryController } from "./category.controller";
 
 const router: Router = Router();

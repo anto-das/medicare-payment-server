@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { orderService } from "./orders.service";
 import { string } from "better-auth";
-import { UserRole } from "../../Types/roleCheck";
+import { UserRole } from "../../types/roleCheck";
 
 const createOrders = async (
   req: Request,

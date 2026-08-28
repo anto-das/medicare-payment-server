@@ -1,9 +1,7 @@
-import { boolean } from "better-auth";
 import dotenv from "dotenv";
 import { prisma } from "../lib/prisma";
-import { UserRole } from "../Types/roleCheck";
-import bcrypt from "bcryptjs";
-import { role } from "better-auth/plugins";
+import { UserRole } from "../types/roleCheck";
+
 import { auth } from "../lib/auth";
 dotenv.config();
 
