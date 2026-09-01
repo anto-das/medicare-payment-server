@@ -16,8 +16,8 @@ model Medicine {
   Cart            Cart[]
 
   orderItems            Order_item[]
-  categories            Categories?  @relation(fields: [categoriesCategory_id], references: [category_id])
-  categoriesCategory_id String?
+  categories            Categories?  @relation(fields: [category_id], references: [category_id])
+  category_id String?
 }
 
 enum ApprovalStatus {
