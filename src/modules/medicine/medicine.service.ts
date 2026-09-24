@@ -5,15 +5,19 @@ import { prisma } from "../../lib/prisma";
 const getMedicine = async ({
   search,
   category_name,
-  price,
+  skip,
+  limit,
+  page,
 }: {
   search: string | undefined;
   category_name: string | undefined;
-  price: string | undefined;
+  skip: number;
+  limit: number;
+  page: number;
 }) => {
   // টাইপ সেফটির জন্য Prisma.MedicineWhereInput ব্যবহার করুন
   const filterCondition: Prisma.MedicineWhereInput[] = [];
-
+  // console.log("console.log from medicine service: ", { page, limit });
   // ১. সার্চ ফিল্টার
   if (search) {
     filterCondition.push({
@@ -44,32 +48,31 @@ const getMedicine = async ({
     });
   }
 
-  // // ৩. প্রাইস ফিল্টার (বাগ ফিক্সড)
-  // if (price && !isNaN(Number(price))) {
-  //   const clientPrice = new Prisma.Decimal(Number(price));
-    
-  //   // মার্জিন ফিক্সড করা হয়েছে (আপনার প্রয়োজন অনুযায়ী ০.৫ বা ১ করে নিতে পারেন)
-  //   const margin = new Prisma.Decimal(0.5); 
-
-  //   filterCondition.push({
-  //     price: {
-  //       gte: clientPrice.minus(margin),
-  //       lte: clientPrice.plus(margin),
-  //     },
-  //   });
-  // }
-
   // ৪. ডাটাবেজ কুয়েরি
   const result = await prisma.medicine.findMany({
+    take: limit,
+    skip: skip,
     where: {
       AND: filterCondition,
     },
   });
-
+  const getAllData = await prisma.medicine.count({
+    where: {
+      AND: filterCondition,
+    },
+  });
   // ৫. রেসপন্স ফরম্যাটিং (Unused property বাদ দেওয়া)
   return result.map((item) => {
     const { category_id, ...res } = item;
-    return res;
+    return {
+      data: result,
+      pagination: {
+        total: getAllData,
+        page,
+        limit,
+        totalPage: Math.ceil(getAllData / limit),
+      },
+    };
   });
 };
 

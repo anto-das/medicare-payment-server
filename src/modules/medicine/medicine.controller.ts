@@ -1,17 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import { medicineService } from "./medicine.service";
+import paginationSorting from "../../helper/paginationSorting";
 
 const getMedicine = async (req: Request, res: Response) => {
-  const { search, category_name, price } = req.query;
+  const { search, category_name } = req.query;
+  const { page, limit, skip } = paginationSorting(req.query);
   const searchStr = typeof search === "string" ? search : undefined;
   const categoryNameStr =
     typeof category_name === "string" ? category_name : undefined;
 
-  const priceStr = typeof price === "string" ? price : undefined;
   const result = await medicineService.getMedicine({
     search: searchStr,
     category_name: categoryNameStr,
-    price: priceStr,
+    skip,
+    limit,
+    page,
   });
   res.status(200).send({
     success: true,
