@@ -62,18 +62,20 @@ const getMedicine = async ({
     },
   });
   // ৫. রেসপন্স ফরম্যাটিং (Unused property বাদ দেওয়া)
-  return result.map((item) => {
+  const medicines = result.map((item) => {
     const { category_id, ...res } = item;
-    return {
-      data: result,
-      pagination: {
-        total: getAllData,
-        page,
-        limit,
-        totalPage: Math.ceil(getAllData / limit),
-      },
-    };
+
+    return res;
   });
+  return {
+    medicines: medicines,
+    pagination: {
+      total: getAllData,
+      page,
+      limit,
+      totalPage: Math.ceil(getAllData / limit),
+    },
+  };
 };
 
 const getSingleMedicine = async (medicine_id: string) => {

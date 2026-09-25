@@ -29,12 +29,33 @@ const postMedicine = async (data: any, seller_id: string) => {
   return result;
 };
 
-const getAllSellerMedicines = async (seller_id: string) => {
-  return await prisma.medicine.findMany({
+const getAllSellerMedicines = async (
+  seller_id: string,
+  page: number,
+  skip: number,
+  limit: number,
+) => {
+  const result = await prisma.medicine.findMany({
+    take: limit,
+    skip: skip,
     where: {
       seller_id,
     },
   });
+  const totalMedicines = await prisma.medicine.count({
+    where: {
+      seller_id: seller_id,
+    },
+  });
+  return {
+    data: result,
+    pagination: {
+      totalMedicine: totalMedicines,
+      page,
+      limit,
+      totalPage: Math.ceil(totalMedicines / limit),
+    },
+  };
 };
 
 const getSellerOrders = async (seller_id: string) => {

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { sellerService } from "./seller.service";
+import paginationSorting from "../../helper/paginationSorting";
 
 const postMedicine = async (
   req: Request,
@@ -9,6 +10,7 @@ const postMedicine = async (
   try {
     const body = req.body;
     // console.log("body from seller controller: ",body);
+
     const sellerId = req.user?.id;
     const result = await sellerService.postMedicine(body, sellerId as string);
     res.status(200).send({
@@ -29,7 +31,13 @@ const getAllSellerMedicines = async (
 ) => {
   try {
     const id = req.user?.id as string;
-    const result = await sellerService.getAllSellerMedicines(id);
+    const { page, skip, limit } = paginationSorting(req.query);
+    const result = await sellerService.getAllSellerMedicines(
+      id,
+      page,
+      skip,
+      limit,
+    );
     res.status(200).send({
       success: true,
       message: "Retrieved all medicine successfully..",
