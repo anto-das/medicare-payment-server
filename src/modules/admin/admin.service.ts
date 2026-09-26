@@ -90,10 +90,40 @@ const updateUserRole = async (email: string, role: UserRole) => {
     },
   });
 };
+const getDayWiseWeeklyRevenue = async () => {
+  // Last 7 days filtering
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  // Raw SQL to extract the day name and sum the amount
+  const result = await prisma.$queryRaw<
+    { day_name: string; total_revenue: number }[]
+  >`
+    SELECT
+      TO_CHAR(d.day_date, 'Dy') AS day_name,
+      COALESCE(SUM(o.total_bill), 0)::FLOAT AS total_revenue
+    FROM (
+      SELECT generate_series(
+        CURRENT_DATE - INTERVAL '6 days',
+        CURRENT_DATE,
+        INTERVAL '1 day'
+      )::date AS day_date
+    ) d
+    LEFT JOIN "Orders" o
+      ON o."createdAt" >= d.day_date
+      AND o."createdAt" < d.day_date + INTERVAL '1 day'
+      AND o.status = 'DELIVERED'
+    GROUP BY d.day_date
+    ORDER BY d.day_date;
+  `;
+
+  return result;
+};
 export const adminService = {
   getUsers,
   getSellers,
   updateUserStatus,
   updateApprovalStatus,
   updateUserRole,
+  getDayWiseWeeklyRevenue
 };

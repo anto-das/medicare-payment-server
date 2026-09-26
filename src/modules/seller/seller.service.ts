@@ -129,25 +129,55 @@ const getDayWiseWeeklyRevenue = async (id: string) => {
   const result = await prisma.$queryRaw<
     { day_name: string; total_revenue: number }[]
   >`
-    SELECT 
-      TRIM(TO_CHAR(d.day_date, 'Day')) AS day_name,
+    SELECT
+      TO_CHAR(d.day_date, 'Dy') AS day_name,
       COALESCE(SUM(o.total_bill), 0)::FLOAT AS total_revenue
     FROM (
       SELECT generate_series(
-        ${sevenDaysAgo}::timestamp, 
-        NOW()::timestamp, 
-        '1 day'::interval
+        CURRENT_DATE - INTERVAL '6 days',
+        CURRENT_DATE,
+        INTERVAL '1 day'
       )::date AS day_date
     ) d
-    LEFT JOIN "Orders" o ON o."createdAt"::date = d.day_date 
-      AND o.seller_id = ${id} 
+    LEFT JOIN "Orders" o
+      ON o."createdAt" >= d.day_date
+      AND o."createdAt" < d.day_date + INTERVAL '1 day'
+      AND o.seller_id = ${id}
       AND o.status = 'DELIVERED'
     GROUP BY d.day_date
-    ORDER BY d.day_date ASC;
+    ORDER BY d.day_date;
   `;
 
   return result;
 };
+
+/**
+ * const getDayWiseWeeklyRevenue = async (id: string) => {
+  const result = await prisma.$queryRaw<
+    { day_name: string; total_revenue: number }[]
+  >`
+    SELECT
+      TO_CHAR(d.day_date, 'Dy') AS day_name,
+      COALESCE(SUM(o.total_bill), 0)::FLOAT AS total_revenue
+    FROM (
+      SELECT generate_series(
+        CURRENT_DATE - INTERVAL '6 days',
+        CURRENT_DATE,
+        INTERVAL '1 day'
+      )::date AS day_date
+    ) d
+    LEFT JOIN "Orders" o
+      ON o."createdAt" >= d.day_date
+      AND o."createdAt" < d.day_date + INTERVAL '1 day'
+      AND o.seller_id = ${id}
+      AND o.status = 'DELIVERED'
+    GROUP BY d.day_date
+    ORDER BY d.day_date;
+  `;
+
+  return result;
+};
+ * */
 
 const deleteOrder = async (id: string) => {
   const result = await prisma.orders.delete({

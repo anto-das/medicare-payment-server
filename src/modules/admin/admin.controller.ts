@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { adminService } from "./admin.service";
+import { UserRole } from "../../types/roleCheck";
 import { success } from "better-auth";
-import { ApprovalStatus, User } from "../../../generated/prisma/client";
 
 const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -97,10 +97,36 @@ const updateUserRole = async (
   }
 };
 
+const getDayWiseWeeklyRevenue = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const user = req.user;
+    if (user?.role !== UserRole.ADMIN) {
+      return res.status(403).send({
+        success: false,
+        message: "Forbidden Access!",
+        data: null,
+      });
+    }
+    const result = await adminService.getDayWiseWeeklyRevenue();
+    res.status(200).send({
+      success: true,
+      message: "retrieved last week revenue  successfully..",
+      data: result,
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
 export const adminController = {
   getUsers,
   getSellers,
   updateUserStatus,
   updateApprovalStatus,
   updateUserRole,
+  getDayWiseWeeklyRevenue
 };

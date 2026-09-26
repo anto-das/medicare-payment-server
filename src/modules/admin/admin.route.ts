@@ -11,6 +11,11 @@ route.get(
   roleCheckerAuth(UserRole.ADMIN),
   adminController.getSellers,
 );
+route.get(
+  "/day-wise/revenue",
+  roleCheckerAuth(UserRole.ADMIN),
+  adminController.getDayWiseWeeklyRevenue,
+);
 route.patch(
   "/users/:id",
   roleCheckerAuth(UserRole.ADMIN),
